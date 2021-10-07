@@ -20,6 +20,6 @@ export default class StartSegmentUseCase {
     if (project.status === 'STARTED') {
       throw new StartPendingProjectException(project.name);
     }
-    this.trackerRepository.updateProjectWithNewSegment(project);
+    await this.trackerRepository.updateProjectWithNewSegment(project);
   };
 }

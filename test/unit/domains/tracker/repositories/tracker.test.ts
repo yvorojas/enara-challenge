@@ -123,4 +123,44 @@ describe('tracker repository tests', () => {
       },
     );
   });
+
+  it('should call to schema update method when call to stop segment method', async () => {
+    const startedAt = new Date().toISOString();
+    jest.setSystemTime(new Date(2021, 10, 8));
+    const endedAt = new Date().toISOString();
+    const name = 'project';
+    const projectToUpdate = {
+      name,
+      segments: [
+        {
+          startedAt,
+        },
+      ],
+      status: 'STARTED',
+    };
+    const expectedResponse = {
+      name,
+      segments: [
+        {
+          startedAt,
+          endedAt,
+          timelapse: 86400000,
+        },
+      ],
+      status: 'FINISHED',
+    };
+    mockUpdate.mockResolvedValueOnce(expectedResponse);
+
+    const response = await trackerRepository.stopSegment(projectToUpdate);
+
+    expect(response).toStrictEqual(86400000);
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+    expect(mockUpdate).toHaveBeenCalledWith(
+      { name },
+      {
+        segments: [...expectedResponse.segments],
+        status: 'FINISHED',
+      },
+    );
+  });
 });
