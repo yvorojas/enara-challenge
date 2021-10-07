@@ -1,0 +1,42 @@
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: 'tsconfig.json',
+    sourceType: 'module',
+  },
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'no-unsafe-innerhtml',
+    'security',
+  ],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    'plugin:security/recommended',
+  ],
+  root: true,
+  env: {
+    node: true,
+    jest: true,
+  },
+  ignorePatterns: ['.eslintrc.js'],
+  rules: {
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'no-unsafe-innerhtml/no-unsafe-innerhtml': 2,
+    'security/detect-non-literal-fs-filename': 2,
+    'security/detect-non-literal-regexp': 2,
+    'security/detect-unsafe-regex': 2,
+    'security/detect-buffer-noassert': 2,
+    'security/detect-child-process': 2,
+    'security/detect-disable-mustache-escape': 2,
+    'security/detect-eval-with-expression': 2,
+    'security/detect-no-csrf-before-method-override': 2,
+    'security/detect-non-literal-require': 2,
+    'security/detect-object-injection': 2,
+    'security/detect-possible-timing-attacks': 1,
+    'security/detect-pseudoRandomBytes': 2,
+  },
+};

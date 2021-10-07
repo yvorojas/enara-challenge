@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: Enara Challenge Project - Time Tracker App
+  version: '1.0'
+  description: Enara Challenge Implementation (Time Tracker App)
+servers:
+  - url: '/api/v1/demo'
+paths:
+  /:
+    get:
+      tags:
+        - 'Demo'
+      summary: demo endpoint
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DemoResponse'
+              example:
+                products:
+                  [
+                    { id: 'string', price: 1500, quantity: 1 },
+                    { id: 'string', price: 1500, quantity: 2 },
+                  ]
+  /validate:
+    post:
+      tags:
+        - 'Demo'
+      summary: demo endpoint to validate request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidRequest'
+            example:
+              validAttribute: 'string'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidRequest'
+              example:
+                validAttribute: 'string'
+  /client:
+    get:
+      tags:
+        - 'Demo'
+      summary: demo endpoint to get client info
+      responses:
+        '200':
+          description: Success response
+components:
+  schemas:
+    ValidRequest:
+      properties:
+        validAttribute:
+          type: string
+    DemoResponse:
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Product:
+      properties:
+        id:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
