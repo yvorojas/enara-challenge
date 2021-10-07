@@ -9,6 +9,7 @@ jest.mock(
   () => () => ({
     getModel: () => ({
       findOne: async params => mockFind(params),
+      find: async () => mockFind(),
       create: async params => mockCreate(params),
       updateOne: async (query, document) => mockUpdate(query, document),
     }),
@@ -32,7 +33,7 @@ describe('tracker repository tests', () => {
   afterAll(() => {
     jest.useRealTimers();
   });
-  it('should call to schema find method when call to find project by property method', async () => {
+  it('should call to schema find one method when call to find project by property method', async () => {
     const name = 'project';
     const project = {
       name,
@@ -53,6 +54,41 @@ describe('tracker repository tests', () => {
     expect(response).toStrictEqual(project);
     expect(mockFind).toHaveBeenCalledTimes(1);
     expect(mockFind).toHaveBeenCalledWith({ name });
+  });
+
+  it('should call to schema find method when call to find all method', async () => {
+    const projects = [
+      {
+        segments: [
+          {
+            startedAt: '2021-10-07T20:30:56.336Z',
+            endedAt: '2021-10-07T20:36:21.958Z',
+            timelapse: 325622,
+          },
+          {
+            startedAt: '2021-10-07T20:36:32.028Z',
+          },
+        ],
+        name: 'my-first-project',
+        status: 'STARTED',
+      },
+      {
+        segments: [
+          {
+            startedAt: '2021-10-07T20:36:39.047Z',
+          },
+        ],
+        name: 'my-second-project',
+        status: 'STARTED',
+      },
+    ];
+    mockFind.mockResolvedValueOnce(projects);
+
+    const response = await trackerRepository.findAll();
+
+    expect(response).toStrictEqual(projects);
+    expect(mockFind).toHaveBeenCalledTimes(1);
+    expect(mockFind).toHaveBeenCalledWith();
   });
 
   it('should call to schema create method when call to create new project method', async () => {

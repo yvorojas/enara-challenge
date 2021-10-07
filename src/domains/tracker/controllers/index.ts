@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { getDuration } from '../../../infrastructure/common/parsers';
 import MissingProjectNameException from '../exceptions/MissingProjectNameException';
 import TrackerUseCases from '../services';
 
@@ -24,12 +25,18 @@ export default class TrackerController {
 
     response.status(201).json({
       message: `stopped new segment for project ${projectName}`,
-      duration: this.calculateTimelapse(timelapse),
+      duration: getDuration(timelapse),
     });
   };
 
-  private calculateTimelapse = timelapse =>
-    timelapse > 60e3
-      ? `${Math.floor(timelapse / 60e3)} minutes`
-      : `${Math.floor(timelapse / 1e3)} seconds`;
+  public report = async (request: Request, response: Response) => {
+    const trackerUseCases = new TrackerUseCases();
+    const projectName: string = request.params.project;
+    const report =
+      !projectName || projectName.trim() === ''
+        ? await trackerUseCases.getFullReport()
+        : await trackerUseCases.getProjectReport(projectName);
+
+    response.status(200).json(report);
+  };
 }

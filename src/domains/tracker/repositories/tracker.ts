@@ -1,5 +1,6 @@
 import ProjectModel, { IProject } from './schemas/project';
 import { Model } from 'mongoose';
+import { calculateTimelapse } from '../../../infrastructure/common/parsers';
 
 export default class TrackerRepository {
   private model: Model<IProject>;
@@ -10,6 +11,8 @@ export default class TrackerRepository {
     await this.model.findOne({
       [property]: value,
     });
+
+  public findAll = async () => await this.model.find();
 
   public createNewProject = async name => {
     const newProject = {
@@ -62,13 +65,7 @@ export default class TrackerRepository {
     return {
       startedAt,
       endedAt,
-      timelapse: this.calculateTimelapse(startedAt, endedAt),
+      timelapse: calculateTimelapse(startedAt, endedAt),
     };
-  };
-
-  private calculateTimelapse = (start, end) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    return +endDate - +startDate;
   };
 }
