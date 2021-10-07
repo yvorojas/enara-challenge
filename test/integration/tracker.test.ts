@@ -1,30 +1,26 @@
 import supertest from 'supertest';
-import mockAxios from 'axios';
 import server from '../../src';
-import { connect, closeDatabase } from './mocks/mongo';
+import mockMongo from './mocks/mongo';
 
 describe('Tracker integration tests', () => {
-  let request;
+  const request = supertest(server);
 
-  beforeAll(async () => {
-    jest.mock(
-      '../../src/infrastructure/repositories/mongoConnector',
-      async () => {
-        await connect();
-      },
-    );
-    request = supertest(server);
-  });
-
+  beforeAll(async () => await mockMongo.connect());
+  afterEach(async () => await mockMongo.clearDatabase());
   afterAll(async done => {
-    await closeDatabase();
-    await server.close();
+    await mockMongo.closeDatabase();
+    server.close();
     done();
   });
 
-  it('should get project name when call to start endpoint', async () => {
-    const res = await request.post('/api/v1/tracker/project/start').expect(200);
+  it('should get successfull message when call to start endpoint', async () => {
+    const project = 'project';
+    const res = await request
+      .post(`/api/v1/tracker/${project}/start`)
+      .expect(201);
 
-    expect(res.body).toStrictEqual('project');
+    expect(res.body).toStrictEqual({
+      message: `started new segment for project ${project}`,
+    });
   });
 });

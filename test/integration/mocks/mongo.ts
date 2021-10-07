@@ -25,9 +25,9 @@ const clearDatabase = async () => {
   const collections = mongoose.connection.collections;
 
   for (const key in collections) {
-    const collection = collections[key];
+    const collection = collections[`${key}`];
     await collection.drop();
   }
 };
 
-export { connect, closeDatabase, clearDatabase };
+export default { connect, closeDatabase, clearDatabase };

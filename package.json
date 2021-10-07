@@ -76,6 +76,7 @@
       "src/**/*.ts",
       "!src/domains/**/entities/dtos/*.ts",
       "!src/domains/**/routes/index.ts",
+      "!src/domains/**/repositories/schemas/*.ts",
       "!src/domains/**/exceptions/*.ts",
       "!src/domains/**/exceptions/**/*.ts",
       "!src/infrastructure/*.ts",
