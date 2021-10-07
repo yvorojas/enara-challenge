@@ -134,6 +134,11 @@ describe('tracker repository tests', () => {
       segments: [
         {
           startedAt,
+          endedAt,
+          timelapse: 86400000,
+        },
+        {
+          startedAt,
         },
       ],
       status: 'STARTED',
@@ -141,6 +146,11 @@ describe('tracker repository tests', () => {
     const expectedResponse = {
       name,
       segments: [
+        {
+          startedAt,
+          endedAt,
+          timelapse: 86400000,
+        },
         {
           startedAt,
           endedAt,
