@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import http from 'http';
 import os from 'os';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import logger from './common/logger';
 
 const app = express();
