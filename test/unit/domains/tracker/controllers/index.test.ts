@@ -137,7 +137,7 @@ describe('tracker controller test', () => {
       expect(response.status).toHaveBeenCalledWith(201);
       expect(response.json).toHaveBeenCalledTimes(1);
       expect(response.json).toHaveBeenCalledWith({
-        message: `stopped new segment for project ${project}`,
+        message: `stopped segment for project ${project}`,
         duration: '2 minutes',
       });
     });
@@ -167,7 +167,7 @@ describe('tracker controller test', () => {
       expect(response.status).toHaveBeenCalledWith(201);
       expect(response.json).toHaveBeenCalledTimes(1);
       expect(response.json).toHaveBeenCalledWith({
-        message: `stopped new segment for project ${project}`,
+        message: `stopped segment for project ${project}`,
         duration: '12.312 seconds',
       });
     });

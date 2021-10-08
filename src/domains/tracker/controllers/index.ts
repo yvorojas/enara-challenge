@@ -24,7 +24,7 @@ export default class TrackerController {
     const timelapse = await new TrackerUseCases().stopSegment(projectName);
 
     response.status(201).json({
-      message: `stopped new segment for project ${projectName}`,
+      message: `stopped segment for project ${projectName}`,
       duration: getDuration(timelapse),
     });
   };

@@ -4,73 +4,116 @@ info:
   version: '1.0'
   description: Enara Challenge Implementation (Time Tracker App)
 servers:
-  - url: '/api/v1/demo'
+  - url: '/api/v1/tracker'
 paths:
-  /:
-    get:
-      tags:
-        - 'Demo'
-      summary: demo endpoint
-      responses:
-        '200':
-          description: Success response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DemoResponse'
-              example:
-                products:
-                  [
-                    { id: 'string', price: 1500, quantity: 1 },
-                    { id: 'string', price: 1500, quantity: 2 },
-                  ]
-  /validate:
+  /{project}/start:
     post:
       tags:
-        - 'Demo'
-      summary: demo endpoint to validate request
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ValidRequest'
-            example:
-              validAttribute: 'string'
+        - 'Tracker'
+      summary: start a project execution
+      parameters:
+        - in: path
+          name: project
+          schema:
+            type: string
+          required: true
+      responses:
+        '201':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'started new segment for project my-first-project'
+  /{project}/stop:
+    post:
+      tags:
+        - 'Tracker'
+      summary: stop a project segment execution
+      parameters:
+        - in: path
+          name: project
+          schema:
+            type: string
+          required: true
+      responses:
+        '201':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopResponse'
+              example:
+                message: 'stopped segment for project my-first-project'
+                duration: '5 minutes'
+  /report:
+    get:
+      tags:
+        - 'Reports'
+      summary: get full report of all project with their duration
       responses:
         '200':
           description: Success response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidRequest'
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportResponse'
               example:
-                validAttribute: 'string'
-  /client:
+                [
+                  { 'name': 'my-first-project', 'duration': '5 minutes' },
+                  { 'name': 'my-second-project', 'duration': '365 minutes' },
+                ]
+
+  /{project}/report:
     get:
       tags:
-        - 'Demo'
-      summary: demo endpoint to get client info
+        - 'Reports'
+      summary: get report of specific project with their duration and finished segments
+      parameters:
+        - in: path
+          name: project
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportByProjectResponse'
+              example:
+                name: 'my-first-project'
+                totalDuration: '10 minutes'
+                segments: ['5 minutes', '5 minutes']
 components:
   schemas:
-    ValidRequest:
+    StopResponse:
       properties:
-        validAttribute:
+        message:
           type: string
-    DemoResponse:
+        duration:
+          type: string
+    ReportResponse:
       properties:
-        products:
+        name:
+          type: string
+        duration:
+          type: string
+    ReportByProjectResponse:
+      properties:
+        name:
+          type: string
+        totalDuration:
+          type: string
+        segments:
           type: array
           items:
-            $ref: '#/components/schemas/Product'
-    Product:
-      properties:
-        id:
-          type: string
-        price:
-          type: number
-        quantity:
-          type: integer
+            type: string

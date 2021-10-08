@@ -33,7 +33,7 @@ describe('Tracker integration tests', () => {
       .expect(201);
 
     expect(res.body.message).toStrictEqual(
-      `stopped new segment for project ${project}`,
+      `stopped segment for project ${project}`,
     );
     expect(res.body.duration).not.toBeNull();
   });
