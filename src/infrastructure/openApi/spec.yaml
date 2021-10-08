@@ -28,6 +28,35 @@ paths:
                     type: string
               example:
                 message: 'started new segment for project my-first-project'
+
+        '400':
+          description: bad request, missing project in url params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Request Validation Failed: Missing project name'
+                code: 400
+                status: 400
+                internalCode: 'MISSING_PROJECT_NAME'
+                details:
+                  message: 'Request Validation Failed: Missing project name'
+
+        '422':
+          description: Trying to start a project with pending segment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Trying to start a project with pending segment'
+                code: 422
+                status: 422
+                internalCode: 'START_PENDING_PROJECT'
+                details:
+                  project: 'my-first-project'
+
   /{project}/stop:
     post:
       tags:
@@ -49,6 +78,49 @@ paths:
               example:
                 message: 'stopped segment for project my-first-project'
                 duration: '5 minutes'
+
+        '400':
+          description: bad request, missing project in url params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Request Validation Failed: Missing project name'
+                code: 400
+                status: 400
+                internalCode: 'MISSING_PROJECT_NAME'
+                details:
+                  message: 'Request Validation Failed: Missing project name'
+
+        '404':
+          description: project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Project not found'
+                code: 404
+                status: 404
+                internalCode: 'PROJECT_NOT_FOUND'
+                details:
+                  project: 'unknown-project'
+
+        '422':
+          description: Trying to stop a project with finished segment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Trying to stop a project with finished segment'
+                code: 422
+                status: 422
+                internalCode: 'STOP_FINISHED_SEGMENT_IN_PROJECT'
+                details:
+                  project: 'my-first-project'
+
   /report:
     get:
       tags:
@@ -93,6 +165,21 @@ paths:
                 name: 'my-first-project'
                 totalDuration: '10 minutes'
                 segments: ['5 minutes', '5 minutes']
+
+        '404':
+          description: project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Project not found'
+                code: 404
+                status: 404
+                internalCode: 'PROJECT_NOT_FOUND'
+                details:
+                  project: 'unknown-project'
+
 components:
   schemas:
     StopResponse:
@@ -117,3 +204,15 @@ components:
           type: array
           items:
             type: string
+    Error:
+      properties:
+        message:
+          type: string
+        code:
+          type: number
+        status:
+          type: number
+        internalCode:
+          type: string
+        details:
+          type: object
